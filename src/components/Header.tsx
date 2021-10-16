@@ -86,7 +86,7 @@ export function Header() {
                     <Text >
                         Jefferson Matos
                     </Text>
-                    <Text  color="gray.500" fontSize="sm">
+                    <Text  color="gray.500" fontSize="smalgot">
                         jefferson8841@gmail.com
                     </Text>
                 </Box>
