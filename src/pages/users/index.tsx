@@ -1,5 +1,7 @@
 import { Text, Box, Flex, Heading, Button, Icon, Table, Thead, Tbody, Tr, Th, Td, Checkbox, useBreakpointValue } from '@chakra-ui/react'
 import { RiAddLine, RiPencilFill } from 'react-icons/ri';
+import Link from 'next/link'
+
 import { Header } from "../../components/Header";
 import { Pagination } from '../../components/Pagination';
 import { Sidebar } from "../../components/Sidebar";
@@ -19,17 +21,20 @@ export default function UserList() {
                 <Box flex="1" borderRadius={8} bg="gray.800" p="8">
                     <Flex mb="8" justify="space-between" align="center">
                         <Heading size="lg" fontWeight="normal">Usuários</Heading>
-                        <Button
-                            as="a"
-                            size="sm"
-                            fontSize="sm"
-                            colorScheme="pink"
-                            leftIcon={
-                                <Icon as={RiAddLine} fontSize="20" />
-                            }
-                        >
-                            Criar Novo
-                        </Button>
+                        <Link href="/users/create" passHref prefetch>
+                            <Button
+                                as="a"
+                                size="sm"
+                                fontSize="sm"
+                                colorScheme="pink"
+                                leftIcon={
+                                    <Icon as={RiAddLine} fontSize="20" />
+                                }
+                            >
+                                Criar Novo
+                            </Button>
+                        </Link>
+
                     </Flex>
 
                     <Table colorScheme="whiteAlpha">
@@ -68,6 +73,7 @@ export default function UserList() {
                                     04 de Abril, 2021
                                 </Td>}
                                 <Td>
+
                                     <Button
                                         as="a"
                                         size="sm"
