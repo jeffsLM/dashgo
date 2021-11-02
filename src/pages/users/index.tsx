@@ -25,6 +25,8 @@ export default function UserList() {
         });
 
         return users;
+    }, {
+        staleTime: 1000 * 5 // segundos
     })
 
     const isWideVersion = useBreakpointValue({
@@ -88,7 +90,7 @@ export default function UserList() {
                                         {
                                             data.map(user => {
                                                 return (
-                                                    <Tr>
+                                                    <Tr key={user.id}>
                                                         <Td px={["4", "4", "6"]}>
                                                             <Checkbox colorScheme="pink" />
                                                         </Td>
