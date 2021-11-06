@@ -1,22 +1,34 @@
-import Link from 'next/link'
-import { Text, Box, Flex, Heading, Button, Icon, Table, Thead, Tbody, Tr, Th, Td, Checkbox, useBreakpointValue, Spinner } from '@chakra-ui/react'
+import {useState} from 'react'
+import NextLink from 'next/link'
+import { Link,Text, Box, Flex, Heading, Button, Icon, Table, Thead, Tbody, Tr, Th, Td, Checkbox, useBreakpointValue, Spinner } from '@chakra-ui/react'
 import { RiAddLine, RiPencilFill } from 'react-icons/ri';
-import { useQuery } from 'react-query'
+
 
 import { Header } from "../../components/Header";
 import { Pagination } from '../../components/Pagination';
 import { Sidebar } from "../../components/Sidebar";
 import { useUsers } from '../../services/hooks/useUsers';
-
+import { queryClient } from '../../services/queryClient';
+import { api } from '../../services/api';
 
 export default function UserList() {
-
-    const { data, isLoading,isFetching, error } = useUsers()
+    const [page,setPage] = useState(1);
+    const { data, isLoading,isFetching, error } = useUsers(page)
 
     const isWideVersion = useBreakpointValue({
         base: false,
         lg: true,
     })
+
+    async function  handlePrefetchUser(userId : number){
+     await queryClient.prefetchQuery(['user',userId], async ()=>{
+         const response = await api.get(`users/${userId}`)
+
+         return response.data;
+     },{
+         staleTime: 1000*60*10 //10min
+     })
+    }
 
     return (
         <Box>
@@ -26,7 +38,7 @@ export default function UserList() {
                 <Box flex="1" borderRadius={8} bg="gray.800" p="8">
                     <Flex mb="8" justify="space-between" align="center">
                         <Heading size="lg" fontWeight="normal">Usuários</Heading>
-                        <Link href="/users/create" passHref prefetch>
+                        <NextLink href="/users/create" passHref prefetch>
                             <Button
                                 as="a"
                                 size="sm"
@@ -38,7 +50,7 @@ export default function UserList() {
                             >
                                 Criar Novo
                             </Button>
-                        </Link>
+                        </NextLink>
 
                     </Flex>
 
@@ -75,7 +87,7 @@ export default function UserList() {
                                     </Thead>
                                     <Tbody>
                                         {
-                                            data.map(user => {
+                                            data.users.map(user => {
                                                 return (
                                                     <Tr key={user.id}>
                                                         <Td px={["4", "4", "6"]}>
@@ -83,9 +95,12 @@ export default function UserList() {
                                                         </Td>
                                                         <Td>
                                                             <Box>
+                                                                <Link color="purple.400" onMouseEnter={() => handlePrefetchUser(Number(user.id))} >
                                                                 <Text fontWeight="bold">
                                                                     {user.name}
                                                                 </Text>
+                                                                </Link>
+
                                                                 <Text fontSize="sm" color="gray.500" >
                                                                     {user.email}
                                                                 </Text>
@@ -116,7 +131,11 @@ export default function UserList() {
                                     </Tbody>
                                 </Table>
 
-                                <Pagination />
+                                <Pagination
+                                    totalCountOfRegisters={data.totalCount}
+                                    currentPage={page}
+                                    onPageChange={setPage}
+                                />
                             </>
                         )
                     }
