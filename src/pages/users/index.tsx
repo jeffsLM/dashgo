@@ -2,7 +2,7 @@ import {useState} from 'react'
 import NextLink from 'next/link'
 import { Link,Text, Box, Flex, Heading, Button, Icon, Table, Thead, Tbody, Tr, Th, Td, Checkbox, useBreakpointValue, Spinner } from '@chakra-ui/react'
 import { RiAddLine, RiPencilFill } from 'react-icons/ri';
-
+import { GetServerSideProps } from 'next';
 
 import { Header } from "../../components/Header";
 import { Pagination } from '../../components/Pagination';
@@ -20,7 +20,7 @@ export default function UserList() {
         lg: true,
     })
 
-    async function  handlePrefetchUser(userId : number){
+    async function  handlePrefetchUser(userId : string){
      await queryClient.prefetchQuery(['user',userId], async ()=>{
          const response = await api.get(`users/${userId}`)
 
@@ -95,7 +95,7 @@ export default function UserList() {
                                                         </Td>
                                                         <Td>
                                                             <Box>
-                                                                <Link color="purple.400" onMouseEnter={() => handlePrefetchUser(Number(user.id))} >
+                                                                <Link color="purple.400" onMouseEnter={() => handlePrefetchUser(user.id)} >
                                                                 <Text fontWeight="bold">
                                                                     {user.name}
                                                                 </Text>
@@ -144,3 +144,6 @@ export default function UserList() {
         </Box>
     )
 }
+
+
+
